@@ -172,7 +172,7 @@ const AsanaDashboard = () => {
         asanaToken: token,
         user_id: user?.uid || ''
       });
-      const url = `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/asana/projects?${params}`;
+      const url = `https://pushing-1.onrender.com/asana/projects?${params}`;
       console.log('Fetching Asana projects from URL:', url);
       const res = await fetch(url);
       console.log('Asana projects response status:', res.status);
@@ -196,7 +196,7 @@ const AsanaDashboard = () => {
         asanaToken: token,
         asanaProjectId: projectId,
       });
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/asana/project-data?${params}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/asana/project-data?${params}`);
       if (!res.ok) throw new Error('Failed to fetch Asana project data');
       const data = await res.json();
       
