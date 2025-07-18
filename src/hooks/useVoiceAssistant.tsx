@@ -19,7 +19,7 @@ export function VoiceAssistantProvider({ children }) {
   const recordingInterval = useRef(null);
   const audioRecorder = useRef(new AudioRecorder());
 
-  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const BASE_URL = "https://pushing-1.onrender.com";
 
   // Add a log entry
   const addLog = (type, message, options) => {
