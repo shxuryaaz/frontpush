@@ -210,10 +210,7 @@ export const sendAudioToBackend = async (
   audioBlob: Blob,
   platform?: "trello" | "linear" | "asana" | "notion",
   config?: PlatformConfig,
-  //apiEndpoint: string = "https://agilow-backend-ur0h.onrender.com/send-audio"
-  //apiEndpoint: string = "https://agilow-backend.vercel.app/"
-  //baseUrl: string = "http://127.0.0.1:8000"
-  baseUrl: string = import.meta.env.VITE_API_URL || "http://localhost:8000"
+  baseUrl: string = "https://pushing-1.onrender.com"
 ): Promise<Response> => {
   // Determine endpoint based on platform
   const apiEndpoint = platform === "linear" 
@@ -241,12 +238,10 @@ export const sendAudioToBackend = async (
       const linearConfig = config as LinearConfig;
       formData.append("apiKey", linearConfig.apiKey);
       formData.append("workspaceId", linearConfig.workspaceId);
-      console.log("Linear config being sent:", { apiKey: linearConfig.apiKey, workspaceId: linearConfig.workspaceId });
     } else if (platform === "asana") {
       const asanaConfig = config as AsanaConfig;
       formData.append("asanaToken", asanaConfig.personalAccessToken);
       formData.append("asanaProjectId", asanaConfig.projectId);
-      console.log("Asana config being sent:", { personalAccessToken: asanaConfig.personalAccessToken, projectId: asanaConfig.projectId });
     }
   } else {
     // Fallback to cookies for backward compatibility
@@ -258,64 +253,17 @@ export const sendAudioToBackend = async (
     formData.append("asanaProjectId", Cookies.get("projectId") || "");
   }
 
-  console.log("Sending audio to backend...", {
-    endpoint: apiEndpoint,
-    baseUrl: baseUrl,
-    audioSize: audioBlob.size,
-    audioType: audioBlob.type,
-    platform: platform,
-    config: config
-  });
+  console.log("Sending audio to backend...", audioBlob.size, "bytes", `Type: ${audioBlob.type}`, `Platform: ${platform}`);
 
   try {
-    console.log("Making request to:", apiEndpoint);
-    console.log("Request method: POST");
-    console.log("FormData contents:");
-    for (let [key, value] of formData.entries()) {
-      console.log(`  ${key}: ${value instanceof Blob ? `Blob(${value.size} bytes, ${value.type})` : value}`);
-    }
-    
     const response = await fetch(apiEndpoint, {
       method: "POST",
       body: formData,
-    });
+    })
 
-    console.log("Backend response status:", response.status, response.statusText);
-    console.log("Backend response headers:", Object.fromEntries(response.headers.entries()));
+    console.log(response);
 
-    // Always log the response content for debugging
-    const responseText = await response.text();
-    console.log("Backend response content:", responseText);
-    console.log("Response URL:", response.url);
-
-    if (!response.ok) {
-      console.error("Backend error response:", responseText);
-      throw new Error(`Backend error: ${response.status} ${response.statusText} - ${responseText}`);
-    }
-
-    // Try to parse as JSON
-    let data;
-    try {
-      data = JSON.parse(responseText);
-    } catch (e) {
-      console.error("Failed to parse response as JSON:", e);
-      console.error("Response was:", responseText);
-      throw new Error("Backend returned invalid JSON");
-    }
-
-    // Create a new response with the parsed data
-    const newResponse = new Response(responseText, {
-      status: response.status,
-      statusText: response.statusText,
-      headers: response.headers
-    });
-    
-    // Add the parsed data as a property
-    (newResponse as any).data = data;
-    
-    return newResponse;
-
-    console.log("Audio sent successfully");
+    console.log("Audio sent successfully:", response);
     return response;
   } catch (error) {
     console.error("Error sending audio:", error);
