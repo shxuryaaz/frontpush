@@ -10,7 +10,7 @@ const ASANA_CLIENT_ID = import.meta.env.VITE_ASANA_CLIENT_ID;
 const REDIRECT_URI = `${window.location.origin}/asana-auth`;
 const ASANA_AUTH_URL = `https://app.asana.com/-/oauth_authorize?client_id=${ASANA_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=default`;
 
-const BACKEND_TOKEN_EXCHANGE_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/asana/exchange-token`;
+const BACKEND_TOKEN_EXCHANGE_URL = `${import.meta.env.VITE_API_URL || 'https://pushing-1.onrender.com'}/asana/exchange-token`;
 
 const AsanaAuth = () => {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const AsanaAuth = () => {
           return;
         }
         // Exchange code for access token via backend
-        const res = await fetch(BACKEND_TOKEN_EXCHANGE_URL, {
+        const res = await fetch("https://pushing-1.onrender.com/asana/token-exchange", {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ code, redirect_uri: REDIRECT_URI })
