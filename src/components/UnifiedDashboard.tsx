@@ -261,7 +261,7 @@ const UnifiedDashboard = ({ platform }: UnifiedDashboardProps) => {
       const user = await getCurrentUser();
       if (!user) return;
       // Fetch from Firestore
-      const res = await fetch(`/api/user-profile?uid=${user.uid}`); // Placeholder, replace with Firestore fetch if needed
+      const res = await fetch(`https://pushing-1.onrender.com/api/user-profile?uid=${user.uid}`); // Updated to use backend URL
       if (res.ok) {
         const data = await res.json();
         setUserProfile(data);
